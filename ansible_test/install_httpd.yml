@@ -1,0 +1,9 @@
+--- 
+  - hosts: docker02
+    remote_user: root
+
+    tasks:
+      - name: install httpd
+        yum: name=httpd
+      - name: start httpd
+        service: name=httpd state=started enabled=yes

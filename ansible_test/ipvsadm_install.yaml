@@ -1,0 +1,7 @@
+---
+  - hosts: docker02
+    remote_user: root
+
+    tasks:
+      - name: install ipvsadm
+        yum: name=ipvsadm

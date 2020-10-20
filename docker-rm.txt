@@ -1,0 +1,14 @@
+#删除所有结束的容器'exited状态.
+docker ps -a |grep 'Exited' |awk '{print $1}' |xargs docker stop |xargs docker rm
+
+
+#删除tag为none的image
+#1)
+docker images |grep none |awk '{print $3}' |xargs docker rmi
+
+2)
+docker images |awk '/<none>/{print "docker rmi "$3}'|bash
+
+
+#删除所有容器
+docker rmi -f $(docker images -aq)

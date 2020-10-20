@@ -1,0 +1,95 @@
+---
+- hosts: docker02   # zabbix_node
+  remote_user: root
+  tasks:
+    - name: yum install epel-release
+      yum: name="epel-release"
+    
+    - name: disable Selinux
+      shell: setenforce 0
+
+    - name: change Selinux config
+      lineinfile:
+        dest: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX=disabled'
+
+
+    - name: Firewalld disable
+      service: name=firewalld state=stopped enabled=no
+
+
+
+#########Ulimit Init ##########
+
+    - name: Ulimit cahnge
+      shell: ulimit -HSn 65535;ulimit -u 81920
+    
+    - name: Change limits.conf nofile
+      lineinfile:
+        dest: /etc/security/limits.conf
+        regexp: '\* - nofile [0-9]+'
+        #backrefs: no
+        line: '* - nofile 65535'
+
+
+    - name: Change hostname
+      shell: "hostnamectl set-hostname node$(ip addr|grep global|grep $(route |grep default|awk '{print $NF}') |head -n1 |awk 
+'{print $2}' |cut -d '/' -f1 |cur -d '.' -f4)"
+    
+
+##########zabbix
+
+
+    - name: yum install pake
+      yum: name={{ item }}
+      with_items:
+      - gcc
+      - mysql-devel
+      - curl
+      - curl-devel
+      - net-snmp
+      - net-snmp-devel
+      - perl-DBI
+
+
+    ## - name: Create user {{ user_1 }}
+    #    user:
+    #      name: "{{ user_1 }}"
+    #      shell: /bin/bash
+    #      groups: wheel
+    #      createhome: yes
+    #      home: /home/{{ user_1 }}
+    #      state: present
+
+
+    - name: add group zabbix
+      group: name="zabbix"
+
+    - name: add user zabbix
+      user: name="{{item.name}}"  group="{{item.group}}"  shell="/sbin/nologin"
+      with_items:
+        - {name: "zabbix", group: "zabbix"}
+    
+
+    - name: install zabbix_agent
+      shell: "wget https://cdn.zabbix.com/stable/3.4.15/zabbix-3.4.15.tar.gz -O zabbix-3.4.15.tar.gz && tar zxvf zabbix-3.4.15.tar.gz && cd zabbix-3.4.15 && ./configure --prefix=/usr/local/zabbix  --enable-agent && make install && /bin/cp -f misc/init.d/fedora/core/zabbix_agentd /etc/init.d/ && sed -i 's#BASEDIR=.*#BASEDIR=/usr/local/zabbix#g' /etc/init.d/zabbix_agentd && chmod 755 /etc/init.d/zabbix_agentd"
+    - name: Change zabbix_agentd.conf Server
+      lineinfile:
+        dest: /usr/local/zabbix/etc/zabbix_agentd.conf
+        regexp: 'Server='
+        #backrefs:no
+        line: 'ServerActive=192.168.11.21'
+        
+    - name: Change zabbix_agentd.conf UnsafeUserParameters
+      lineinfile:
+        dest: /usr/local/zabbix/etc/zabbix_agentd.conf
+        regexp: 'UnsafeUserParameters='
+        #backrefs: no
+        line: 'UnsafeUserParameters=1'
+        
+    - name: Change zabbix_agentd.conf hostname
+      shell: "sed -i \"s/Hostname=.*/Hostname=$(hostname)/g\"  /usr/local/zabbix/etc/zabbix_agentd.conf"
+      
+    - name: zabbix_agent start
+      service: name=zabbix_agentd state=started enabled=true

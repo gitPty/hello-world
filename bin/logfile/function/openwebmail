@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# 主要分析 openwebmail 這個服務所產生的 logfile 資料，
+# 分析的是 /var/log/openwebmail.log 這個檔案
+# 目前僅分析
+#	1. 登入次數
+#	2. 錯誤登入次數
+#	3. 傳送電子郵件次數！
+#
+# Writtern by VBird
+#
+# 2005/01/09    VBird   Released
+#
+#####################################################################
+# Openwebmail 的登錄資料的功能函數
+funcopenwebmail () {
+	echo "================= Openwebmail 的登錄檔資訊彙整 ======================="	>> $logfile
+	grep "$y" /var/log/openwebmail.log > $basedir/openwebmaillog
+
+	# 1. 先取得成功登入的次數！
+	testing1=`grep 'login' $basedir/openwebmaillog | grep -v error`
+	if [ "$testing1" != "" ]; then
+		echo "成功登入 OpenWebmail 的次數統計："					>> $logfile
+		echo "帳號 來源 次數" | \
+			awk '{printf("%-6s %-10s %-15s %-4s\n", " ", $1, $2, $3)}'		>> $logfile
+		grep 'login' $basedir/openwebmaillog | grep -v error | awk '{print $9 " " $8}'|\
+			sed 's/(//g' | sed 's/)//g' | sort |\
+			awk '{ for( i=0; i<1; i++ ) Number[$i]++ };
+				END{ for( course in Number )
+				printf( "%-25s %3d\n", course, Number[course])}' |\
+			sort -k 3 -gr  | \
+			awk '{printf("%-6s %-10s %-15s %3d\n", " ",$1, $2, $3)}'		>> $logfile
+		echo " "									>> $logfile
+		testing2=`grep 'send message' $basedir/openwebmaillog`
+	fi
+
+	# 2. 如果有登入過，並且找到有送出郵件時～
+	if [ "$testing2" != "" ]; then
+		echo "利用 OpenWebmail 發送出信件的次數統計："					>> $logfile
+		echo "帳號 來源 次數" | \
+			awk '{printf("%-6s %-10s %-15s %-4s\n", " ", $1, $2, $3)}'		>> $logfile
+		grep 'send message' $basedir/openwebmaillog | awk '{print $9 " " $8}'|\
+			sed 's/(//g' | sed 's/)//g' | sort |\
+			awk '{ for( i=0; i<1; i++ ) Number[$i]++ };
+				END{ for( course in Number )
+				printf( "%-25s %3d\n", course, Number[course])}' |\
+			sort -k 3 -gr  | \
+			awk '{printf("%-6s %-10s %-15s %3d\n", " ",$1, $2, $3)}'		>> $logfile
+		echo " "									>> $logfile
+	fi
+	
+	# 3. 錯誤登入的次數！
+	testing3=`grep 'login' $basedir/openwebmaillog | grep error`
+	if [ "$testing3" != "" ]; then
+		echo "登入失敗 OpenWebmail 的次數統計："					>> $logfile
+		echo "帳號 來源 次數" | \
+			awk '{printf("%-6s %-10s %-15s %-4s\n", " ", $1, $2, $3)}'		>> $logfile
+		grep 'login' $basedir/openwebmaillog | grep  error | awk '{print $9 " " $8}'|\
+			sed 's/(//g' | sed 's/)//g' | sort |\
+			awk '{ for( i=0; i<1; i++ ) Number[$i]++ };
+				END{ for( course in Number )
+				printf( "%-25s %3d\n", course, Number[course])}' |\
+			sort -k 3 -gr  | \
+			awk '{printf("%-6s %-10s %-15s %3d\n", " ",$1, $2, $3)}'		>> $logfile
+		echo " "									>> $logfile
+	fi
+
+	# 4. 都沒有任何資訊的時候！
+	if [ "$testing1" == "" ] && [ "$testing2" == "" ] && [ "$testing3" == "" ] ; then
+		echo "本日沒有任何 Open Webmail 的資訊～"					>> $logfile
+		echo " "									>> $logfile
+	fi
+	echo " "										>> $logfile
+}

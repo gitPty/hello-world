@@ -1,0 +1,32 @@
+apiVersion: krew.googlecontainertools.github.com/v1alpha2
+kind: Plugin
+metadata:
+  creationTimestamp: null
+  name: ingress-nginx
+spec:
+  description: |
+    The official kubectl plugin for ingress-nginx.
+  homepage: https://kubernetes.github.io/ingress-nginx/kubectl-plugin/
+  platforms:
+  - bin: ./kubectl-ingress_nginx
+    files:
+    - from: '*'
+      to: .
+    selector:
+      matchLabels:
+        arch: amd64
+        os: darwin
+    sha256: 36c13b09dcd5778232514179b9ee00a8d4e31038c3323ba8b0e2f40b1dc61604
+    uri: https://github.com/kubernetes/ingress-nginx/releases/download/nginx-0.25.0/kubectl-ingress_nginx-darwin-amd64.tar.gz
+  - bin: ./kubectl-ingress_nginx
+    files:
+    - from: '*'
+      to: .
+    selector:
+      matchLabels:
+        arch: amd64
+        os: linux
+    sha256: 00c6d727a9a13405d7cb4ec73ac33a6f1621b01b6ad785a493299e159824d1e0
+    uri: https://github.com/kubernetes/ingress-nginx/releases/download/nginx-0.25.0/kubectl-ingress_nginx-linux-amd64.tar.gz
+  shortDescription: Interact with ingress-nginx
+  version: v0.25.0

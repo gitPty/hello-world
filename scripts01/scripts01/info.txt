@@ -1,0 +1,6 @@
+Linux - Sysadmin
+Databases - oracle,MySQL etc.
+security - firewall,network,online security etc.
+cool - website
+stoarge -Netapp,EMC etc.
+productivity - too many technologies to explore ,no much time available

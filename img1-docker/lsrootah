@@ -1,0 +1,5 @@
+-rw-------   1 root root     1024 Oct 20 08:51 .rnd
+drwxr-xr-x   3 root root     4096 Jan  9 11:34 scripts01
+drwx------.  2 root root       93 Dec 24 19:35 .ssh
+-rw-r--r--.  1 root root      129 Dec 29  2013 .tcshrc
+-rw-------   1 root root     8350 Jan  9 11:30 .viminfo

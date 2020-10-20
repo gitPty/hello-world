@@ -1,0 +1,5 @@
+total 82644
+dr-xr-x---. 17 root root     4096 Jan  9 16:02 .
+dr-xr-xr-x. 21 root root     4096 Oct  9 13:55 ..
+drwxr-xr-x   2 root root       45 Oct 31 14:30 anaconda2
+-rw-------.  1 root root     1420 Jan 10  2019 anaconda-ks.cfg

@@ -1,0 +1,4 @@
+x= Sysadmin
+# 例如x= syaadmin ,x=sys admin 都是不行的，注意shell中变量赋值规则。
+#注意这里的变量值里不能有空格，不然source 文件时会报错，默认以空格分隔，、。
+y=Netapp,EMC,etc.

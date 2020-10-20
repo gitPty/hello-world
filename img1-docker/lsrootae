@@ -1,0 +1,5 @@
+drwxr-xr-x   4 root root       51 Dec 24 18:16 .kube
+-rw-r--r--   1 root root      175 Dec 24 18:20 kubeadm-init.txt
+-rw-------   1 root root       87 Jan  9 09:49 .lesshst
+drwxr-xr-x   3 root root       19 Oct 21 11:56 .local
+drwxr-xr-x   2 root root       27 Dec 28 18:28 manifests

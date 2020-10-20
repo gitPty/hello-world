@@ -1,0 +1,14 @@
+90372	/home/phpmyadmin
+1652	/home/test01
+16	/home/pro1
+16	/home/ftpuser
+16	/home/biu
+12	/home/pro3
+12	/home/pro2
+12	/home/myquota5
+12	/home/myquota4
+12	/home/myquota3
+12	/home/myquota2
+12	/home/myquota1
+12	/home/info
+0	/home/myquota

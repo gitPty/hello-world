@@ -1,0 +1,1 @@
+readfd.sh: line 9: echoUsage: readfd.sh <filepath>: command not found
